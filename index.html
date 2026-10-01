@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>A fortune for you</title>
+  <meta name="description" content="Crack open a fortune cookie and see what's inside.">
+  <meta name="theme-color" content="#a8291f">
+
+  <!-- Link previews: URLs must be absolute, with a trailing slash. -->
+  <link rel="canonical" href="https://fortune.khoaly.xyz/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Fortune Cookie">
+  <meta property="og:title" content="Crack open a fortune cookie">
+  <meta property="og:description" content="Somebody sent you a fortune. Open it and see what's inside.">
+  <meta property="og:url" content="https://fortune.khoaly.xyz/">
+  <meta property="og:image" content="https://fortune.khoaly.xyz/assets/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="An opened fortune cookie with a blank slip of paper">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Crack open a fortune cookie">
+  <meta name="twitter:description" content="Somebody sent you a fortune. Open it and see what's inside.">
+  <meta name="twitter:image" content="https://fortune.khoaly.xyz/assets/og-image.png">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <!-- Self-hosted Fraunces: no request to Google, so nothing for cookie/tracker blockers to stop. -->
+  <link rel="preload" href="fonts/Fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/Fraunces-Italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-state="loading">
+  <main class="page">
+    <h1 class="title">A fortune for you</h1>
+
+    <button id="stage" class="stage" type="button" aria-label="Crack open the fortune cookie">
+      <div id="frames" class="frames" aria-hidden="true"></div>
+    </button>
+
+    <div class="below">
+    <p id="hint" class="hint">You get one crack a day. Tap the cookie to open today's.</p>
+    <!-- Screen-reader copy of the fortune painted on the SVG -->
+    <p id="live" class="sr-only" aria-live="polite"></p>
+
+    <div class="actions">
+      <button id="add" class="btn btn--ghost" type="button">Add a fortune</button>
+      <button id="share" class="btn btn--share" type="button" aria-live="polite" disabled>Share this fortune</button>
+    </div>
+    </div>
+
+    <noscript><p class="hint">This fortune cookie needs JavaScript to open.</p></noscript>
+    <footer class="credit">Made by <a href="https://khoaly.xyz">Khoa</a></footer>
+  </main>
+
+  <dialog id="add-dialog" class="dialog" aria-labelledby="add-title">
+    <form id="add-form" class="dialog__body" method="dialog" novalidate>
+      <h2 id="add-title">Add a fortune</h2>
+      <p class="dialog__lede">Write one for the cookie jar. It opens in your email app, addressed to me, and I'll read every one.</p>
+
+      <label for="add-text">Your fortune</label>
+      <textarea id="add-text" name="fortune" rows="3" maxlength="80" required
+                placeholder="You will soon find something you thought you had lost."></textarea>
+      <div class="dialog__count"><span id="add-count">0</span> / 80</div>
+
+      <label for="add-credit">Credit (optional)</label>
+      <input id="add-credit" name="credit" type="text" maxlength="40" autocomplete="name" placeholder="Name or @handle">
+
+      <p id="add-status" class="dialog__status" role="status"></p>
+
+      <div class="dialog__actions">
+        <button type="button" id="add-cancel" class="btn btn--ghost btn--dark">Close</button>
+        <button type="submit" class="btn btn--dark">Send by email</button>
+      </div>
+      <p class="dialog__fallback">No mail app? Write to <a href="mailto:hello@khoaly.xyz">hello@khoaly.xyz</a>.</p>
+    </form>
+  </dialog>
+
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>
