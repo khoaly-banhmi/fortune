@@ -1,0 +1,10 @@
+# Deploy with:  cd cloudflare && npx wrangler deploy
+name = "khoaly-fortune"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# Exactly these two routes, nothing broader, so the Bearblog at khoaly.xyz is never routed through this Worker.
+routes = [
+  { pattern = "khoaly.xyz/fortune", zone_name = "khoaly.xyz" },
+  { pattern = "khoaly.xyz/fortune/*", zone_name = "khoaly.xyz" },
+]

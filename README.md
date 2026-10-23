@@ -10,17 +10,35 @@ data/messages.json    [{ "id": "<random key>", "text": "<fortune>" }, ...]
 assets/cookie/        frame-01..08.svg (your art, C2PA metadata stripped)
 assets/og-image.png   1200x630 link preview (opened cookie, blank slip)
 fonts/                Fraunces (latin, upright + italic), self-hosted
-scripts/              set-site-url.sh, make-og.sh, new-key.py
+cloudflare/           worker.js + wrangler.toml: serves this site at khoaly.xyz/fortune/
+scripts/              make-og.sh, make-icons.sh, new-key.py
 ```
 
 ## Deploy
 
-1. Push to `khoaly-banhmi/fortune` and enable Pages (Settings → Pages → deploy from `main`, `/ (root)`). Leave the **custom domain empty**: the project page lives at `https://khoaly-banhmi.github.io/fortune/` and is served publicly at **https://khoaly.xyz/fortune/** by the routing in front of it (outside this repo).
+1. Push to `khoaly-banhmi/fortune` and enable Pages (Settings → Pages → deploy from `main`, `/ (root)`). Leave the **custom domain empty**: the project page lives at `https://khoaly-banhmi.github.io/fortune/` and the Cloudflare Worker in `cloudflare/` serves it publicly at **https://khoaly.xyz/fortune/** (see below).
 2. Everything in the page uses **relative paths**, so it works under `/fortune/` as long as the address ends with a slash. `/fortune` should redirect to `/fortune/`. The absolute URLs for link previews (`canonical`, `og:url`, `og:image`, `twitter:image` in `index.html`) point at `https://khoaly.xyz/fortune/`; change those four if the address ever moves.
 3. Test locally with any static server (the page `fetch`es the SVGs and JSON, so `file://` won't work):
    ```bash
    python3 -m http.server 8123
    ```
+
+## Cloudflare Worker (khoaly.xyz/fortune/ next to the Bearblog)
+
+`khoaly.xyz` is a Bearblog; this site is a GitHub Pages project site. `cloudflare/worker.js` proxies `/fortune/*` to `khoaly-banhmi.github.io/fortune/*` and nothing else. It is bound to exactly two routes, `khoaly.xyz/fortune` and `khoaly.xyz/fortune/*`, so the blog's own traffic never goes through it. It also redirects `/fortune` to `/fortune/`, allows only GET/HEAD, and never forwards cookies or auth headers to GitHub.
+
+**One-time setup**
+1. **DNS:** in Cloudflare, the `khoaly.xyz` record that points at Bearblog must be **proxied (orange cloud)**, otherwise Worker routes don't run. Set SSL/TLS to **Full** (not Flexible, which causes redirect loops). Afterwards, load the blog and check it still works.
+2. **Deploy:** `cd cloudflare && npx wrangler deploy` (routes come from `wrangler.toml`). Or in the dashboard: Workers & Pages → Create → paste `worker.js` → Settings → Triggers → add the same two routes.
+3. **Don't** create a Bearblog post or page with the slug `fortune`; the Worker would shadow it.
+4. Optional: delete the old `fortune.khoaly.xyz` DNS record.
+
+**Check it**
+```bash
+curl -sI https://khoaly.xyz/fortune        # 301 -> /fortune/
+curl -sI https://khoaly.xyz/fortune/       # 200, served by GitHub Pages
+curl -sI https://khoaly.xyz/               # 200, the blog, unchanged
+```
 
 ## Adding fortunes
 
