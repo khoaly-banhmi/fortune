@@ -15,8 +15,8 @@ scripts/              set-site-url.sh, make-og.sh, new-key.py
 
 ## Deploy
 
-1. Push this folder to a GitHub repo, then Settings → Pages → deploy from the branch root.
-2. Link previews already point at `https://fortune.khoaly.xyz/`. If the domain ever changes, run `scripts/set-site-url.sh <new-url>` after resetting the URLs in `index.html` by hand (the script only replaces the `__SITE_URL__` placeholder).
+1. Push to `khoaly-banhmi/fortune` and enable Pages (Settings → Pages → deploy from `main`, `/ (root)`). Leave the **custom domain empty**: the project page lives at `https://khoaly-banhmi.github.io/fortune/` and is served publicly at **https://khoaly.xyz/fortune/** by the routing in front of it (outside this repo).
+2. Everything in the page uses **relative paths**, so it works under `/fortune/` as long as the address ends with a slash. `/fortune` should redirect to `/fortune/`. The absolute URLs for link previews (`canonical`, `og:url`, `og:image`, `twitter:image` in `index.html`) point at `https://khoaly.xyz/fortune/`; change those four if the address ever moves.
 3. Test locally with any static server (the page `fetch`es the SVGs and JSON, so `file://` won't work):
    ```bash
    python3 -m http.server 8123
